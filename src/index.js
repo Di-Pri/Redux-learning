@@ -1,26 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { createStore } from "redux";
 import { Provider } from "react-redux";
-
-const defaultState = {
-  cash: 0,
-};
-
-const reducer = (state = defaultState, action) => {
-  switch (action.type) {
-    case "ADD_CASH":
-      return { ...state, cash: state.cash + action.payload };
-    case "GET_CASH":
-      return { ...state, cash: state.cash - action.payload };
-    default:
-      return state;
-  }
-};
-const store = createStore(reducer);
+import { store } from "./store";
 
 ReactDOM.render(
+  // Store с помощью provider передаётся в реакт компоненты
+  // в которых мы используем state
+  // тем самым связываем redux с react
   <Provider store={store}>
     <App />
   </Provider>,
