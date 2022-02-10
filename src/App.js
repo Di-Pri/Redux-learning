@@ -1,5 +1,7 @@
 import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
+import { addCustomerAction, removeCustomerAction } from "./store/customerReducer";
+import { addCashAction, getCashAction } from "./store/cashReducer";
 
 function App() {
   // Есть dispatch, в него передаётся action
@@ -8,36 +10,48 @@ function App() {
   const cash = useSelector((state) => state.cash.cash);
 
   const addCash = (cash) => {
-    dispatch({ type: "ADD_CASH", payload: cash });
+    dispatch(addCashAction(cash));
   };
 
   const getCash = (cash) => {
-    dispatch({ type: "GET_CASH", payload: cash });
+    dispatch(getCashAction(cash));
+    //  dispatch({ type: "GET_CASH", payload: cash });
   };
   console.log("cash", cash);
 
   const customers = useSelector((state) => state.customers.customers);
-  const addCustomer = (customers) => {
-    dispatch({ type: "ADD_CUSTOMER", payload: customers });
+  const addCustomer = (name) => {
+    const customer = {
+      name,
+      id: Date.now(),
+    };
+    dispatch(addCustomerAction(customer));
   };
 
-  const getCustomers = (customers) => {
-    dispatch({ type: "GET_CUSTOMERS", payload: customers });
+  const removeCustomer = (customer) => {
+    dispatch(removeCustomerAction(customer.id));
   };
   console.log("customers", customers);
 
   return (
     <div className="App">
-      <div className="cash">{cash}</div>
+      <div className="cash">Balance: {cash}</div>
       <div className="buttons">
         <button onClick={() => addCash(Number(prompt()))}>Add cash</button>
         <button onClick={() => getCash(Number(prompt()))}>Get cash</button>
       </div>
       <div className="buttons">
-        <button onClick={() => addCustomer(String(prompt()))}>Add customer</button>
-        <button onClick={() => getCustomers(String(prompt()))}>Get customers</button>
+        <button onClick={() => addCustomer(prompt())}>Add customers</button>
       </div>
-      <div className="customers">{customers.join(", ")}</div>
+      {customers.length > 0 ? (
+        <div>
+          {customers.map((customer) => (
+            <div onClick={() => removeCustomer(customer)}>{customer.name}</div>
+          ))}
+        </div>
+      ) : (
+        <div>No customers</div>
+      )}
     </div>
   );
 }
